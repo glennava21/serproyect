@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruleta Cósmica de Sabiduría</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cosmic: {
+                            purple: '#6B46C1',
+                            blue: '#3B82F6',
+                            pink: '#EC4899',
+                            gold: '#F59E0B',
+                            emerald: '#10B981',
+                            violet: '#8B5CF6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .cosmic-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .cosmic-gradient-dark {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        
+        .wheel-container {
+            perspective: 1000px;
+        }
+        
+        .wheel-shadow {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            from {
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+            }
+            to {
+                box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .spinning {
+            animation: spin 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(1800deg); }
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen transition-colors duration-300 bg-gradient-to-br from-purple-100 to-blue-100 dark:from-gray-900 dark:to-purple-900">
+    <!-- Estrellas de fondo -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Header -->
+    <header class="relative z-10 p-6">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">🌟</span>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Ruleta Cósmica de Sabiduría</h1>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button id="themeToggle" class="p-2 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <span class="text-xl">🌙</span>
+                </button>
+                <button id="soundToggle" class="p-2 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <span class="text-xl">🔊</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="relative z-10 max-w-6xl mx-auto px-6 py-12">
+        <!-- Mensaje de bienvenida -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+                ✨ Descubre tu Mensaje Cósmico del Día ✨
+            </h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                Gira la ruleta sagrada y recibe una pregunta poderosa que transformará tu relación con la abundancia y la conciencia
+            </p>
+        </div>
+
+        <!-- Contador de uso diario -->
+        <div class="text-center mb-8">
+            <div id="dailyStatus" class="inline-flex items-center px-4 py-2 rounded-full bg-white dark:bg-gray-800 shadow-lg">
+                <span class="text-green-500 mr-2">✓</span>
+                <span class="text-gray-700 dark:text-gray-300">Tirada disponible hoy</span>
+            </div>
+        </div>
+
+        <!-- Ruleta -->
+        <div class="flex justify-center mb-12">
+            <div class="wheel-container">
+                <div class="relative">
+                    <canvas id="wheelCanvas" width="400" height="400" class="wheel-shadow rounded-full"></canvas>
+                    <!-- Puntero -->
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-10">
+                        <div class="w-6 h-8 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-b-full shadow-lg"></div>
+                    </div>
+                    <!-- Botón central -->
+                    <button id="spinButton" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center text-white font-bold text-sm pulse-glow">
+                        GIRAR
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje del día -->
+        <div id="dailyMessage" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 mb-8 hidden">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6">
+                    <span class="text-white text-2xl">🌟</span>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Tu Pregunta Cósmica del Día</h3>
+                <p id="questionText" class="text-lg text-gray-600 dark:text-gray-300 italic mb-6 leading-relaxed"></p>
+                <div class="border-t dark:border-gray-700 pt-6">
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">💫 Reflexión Guiada</h4>
+                    <p id="reflectionText" class="text-gray-600 dark:text-gray-300 leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frase motivacional diaria -->
+        <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-8 text-white text-center mb-8">
+            <h3 class="text-xl font-bold mb-4">🌟 Frase Cósmica del Día</h3>
+            <p id="dailyQuote" class="text-lg italic"></p>
+        </div>
+
+        <!-- Lección de disciplina -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4 text-center">
+                ⚡ Lección de Disciplina Energética
+            </h3>
+            <p id="disciplineLesson" class="text-gray-600 dark:text-gray-300 leading-relaxed text-center"></p>
+        </div>
+     
+
+    <!-- Modal de límite diario -->
+    <div id="limitModal" class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-8 slide-in">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full mb-6">
+                    <span class="text-white text-2xl">⏰</span>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Paciencia Cósmica</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    Ya has recibido tu mensaje del día. La sabiduría cósmica requiere tiempo para integrarse. 
+                    Regresa mañana para una nueva revelación.
+                </p>
+                <button id="closeModal" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-300">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio -->
+    <audio id="spinSound" preload="auto">
+        <source src="data:audio/wav;base64,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" type="audio/wav">
+    </audio>
+
+    <script>
+        // === DATOS Y CONFIGURACIÓN ===
+        const cosmicQuestions = [
+            "¿Qué energía, espacio, conciencia y elección puedo ser para recibir más dinero de lo que jamás imaginé, con total facilidad?",
+            "¿Qué tomaría para que el dinero me busque a mí como yo busco el café en las mañanas?",
+            "Si no tuviera ningún punto de vista sobre el dinero, ¿cuánto podría recibir hoy?",
+            "¿Y si el dinero fuera mi amante, cómo le estaría tratando?",
+            "¿Qué está creando escasez en mi vida que podría soltar ahora mismo?",
+            "¿Qué es el dinero para mí... y de quién aprendí eso?",
+            "¿Qué juicios estoy usando para limitar el dinero que puedo elegir?",
+            "¿Qué me impide reconocer que ya soy una energía de riqueza?",
+            "¿Cuánto más dinero podría tener si me atreviera a disfrutar sin culpa?",
+            "¿Qué posibilidades infinitas con el dinero están disponibles hoy que aún no he reconocido?",
+            "¿Qué debo dejar de controlar para que el dinero fluya con más gozo?",
+            "¿Estoy dispuesta a recibir dinero de formas inesperadas y sin esfuerzo?",
+            "¿Qué estoy evitando o defendiendo que me impide ser millonaria?",
+            "¿Qué más es posible con el dinero que nunca nadie me enseñó?",
+            "¿Qué pasaría si dejara de rechazar ser rica?",
+            "¿Y si el dinero no fuera un problema… qué elegiría hoy?",
+            "¿Qué estoy copiando de mi familia sobre el dinero que ya no me sirve?",
+            "¿Qué tomaría para que el dinero se muestre hoy con facilidad, alegría y gloria?",
+            "¿Qué nivel de gratitud y gozo puedo ser hoy para duplicar mis ingresos?",
+            "¿Cuánto dinero estoy dispuesto(a) a tener sin perder mi esencia?",
+            "¿Qué conciencia del dinero estoy listo(a) para recibir hoy?",
+            "¿Qué energía puedo ser para atraer clientes que me paguen con gozo?",
+            "¿Qué más puedo vender, crear o elegir que sea una contribución financiera para mí y para el mundo?",
+            "¿Qué estoy haciendo más difícil de lo que realmente es con el dinero?",
+            "¿Qué parte de mi magia estoy ignorando que crearía más dinero de inmediato?",
+            "¿Qué me impide ser el imán que realmente soy para el dinero?",
+            "¿Qué tomaría para elegir más dinero sin tener que justificarlo?",
+            "¿Y si el dinero no fuera serio ni pesado, cómo sería?",
+            "¿Qué riqueza energética está disponible para mí ahora mismo?",
+            "¿Qué puedo ser o hacer hoy que cree más dinero ahora y para toda la eternidad?"
+        ];
+
+        const reflections = [
+            "Permite que esta pregunta resuene en tu corazón. La energía que buscas ya existe dentro de ti, solo necesita ser reconocida y expandida.",
+            "Reflexiona sobre las formas en que has estado limitando tu capacidad de recibir. ¿Qué creencias puedes soltar hoy?",
+            "Imagina por un momento que no tienes limitaciones. ¿Qué se siente diferente en tu energía cuando te permites esta expansión?",
+            "Considera esta pregunta como una invitación a una nueva relación con la abundancia. ¿Qué cambiaría si fueras completamente abierto(a)?",
+            "Esta pregunta es una llave hacia una mayor conciencia. Permite que abra puertas que ni siquiera sabías que existían.",
+            "Observa qué surge cuando contemplas esta pregunta sin juzgar. La sabiduría often llega en susurros, no en gritos.",
+            "¿Qué pasaría si esta pregunta fuera la respuesta que has estado buscando? Permite que te transforme desde adentro.",
+            "Lleva esta pregunta contigo hoy. Permite que se mueva através de ti y note qué cambia en tu experiencia.",
+            "Esta pregunta contiene una frecuencia especial. Permite que active todo tu potencial de abundancia y conciencia.",
+            "Contempla esta pregunta como una medicina energética. ¿Qué aspectos de tu vida está sanando ahora mismo?"
+        ];
+
+        const dailyQuotes = [
+            "El universo conspira para que recibas exactamente lo que estás dispuesto(a) a reconocer que mereces.",
+            "Tu energía es tu moneda más valiosa. Inviértela sabiamente en lo que expande tu conciencia.",
+            "No eres víctima de tus circunstancias, eres el arquitecto de tu realidad energética.",
+            "La abundancia no es algo que logras, es algo que ya eres. Solo necesitas recordarlo.",
+            "Cada momento es una oportunidad para elegir una realidad más expansiva y gozosa.",
+            "Tu capacidad de recibir está directamente relacionada con tu disposición a ser vulnerable.",
+            "El dinero es energía en movimiento. Permite que fluya através de ti sin resistencia.",
+            "Eres mucho más poderoso(a) de lo que has estado dispuesto(a) a reconocer.",
+            "La magia sucede cuando dejas de controlar y empiezas a permitir.",
+            "Tu única limitación es tu disposición a reconocer tus posibilidades infinitas."
+        ];
+
+        const disciplineLessons = [
+            "Disciplina Energética: Dedica 5 minutos cada mañana a sentir gratitud por el dinero que ya tienes, sin importar la cantidad.",
+            "Acción Consciente: Hoy, antes de gastar dinero, pregúntate: '¿Esta compra expande mi energía o la contrae?'",
+            "Práctica de Abundancia: Bendice cada billete que pase por tus manos, tanto cuando lo recibas como cuando lo entregues.",
+            "Ritual de Prosperidad: Camina durante 10 minutos visualizando que ya tienes la abundancia que deseas.",
+            "Conciencia Financiera: Revisa tus gastos del día con amor, no con juicio. ¿Qué te enseñan sobre tus patrones?",
+            "Expansión Energética: Practica decir 'SÍ' a oportunidades pequeñas que normalmente rechazarías por miedo.",
+            "Limpieza Energética: Organiza tu espacio físico como acto de amor hacia la abundancia que está llegando.",
+            "Comunicación Consciente: Habla de dinero con gratitud y posibilidad, nunca con escasez o queja.",
+            "Inversión en Ti: Dedica recursos (tiempo, energía o dinero) a algo que nutra tu crecimiento personal.",
+            "Práctica de Recibir: Acepta un cumplido hoy sin desviarlo. Practica el arte de recibir con gracia."
+        ];
+
+        // === VARIABLES GLOBALES ===
+        let canvas, ctx;
+        let isSpinning = false;
+        let soundEnabled = true;
+        let currentRotation = 0;
+        let selectedQuestionIndex = 0;
+
+        // === INICIALIZACIÓN ===
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            canvas = document.getElementById('wheelCanvas');
+            ctx = canvas.getContext('2d');
+            
+            setupEventListeners();
+            drawWheel();
+            createStars();
+            checkDailyStatus();
+            loadDailyContent();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('spinButton').addEventListener('click', spinWheel);
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.getElementById('soundToggle').addEventListener('click', toggleSound);
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+            
+            // Inicializar tema
+            if (isDarkMode()) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeToggle').innerHTML = '<span class="text-xl">☀️</span>';
+            }
+        }
+
+        // === FUNCIONES DE LA RULETA ===
+        function drawWheel() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 180;
+            const segments = 30;
+            const anglePerSegment = (2 * Math.PI) / segments;
+
+            // Colores cósmicos
+            const colors = [
+                '#6B46C1', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6',
+                '#EF4444', '#F97316', '#84CC16', '#06B6D4', '#8B5CF6', '#EC4899'
+            ];
+
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar segmentos
+            for (let i = 0; i < segments; i++) {
+                const startAngle = i * anglePerSegment + currentRotation;
+                const endAngle = (i + 1) * anglePerSegment + currentRotation;
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Dibujar números
+                const textAngle = startAngle + anglePerSegment / 2;
+                const textX = centerX + Math.cos(textAngle) * (radius - 30);
+                const textY = centerY + Math.sin(textAngle) * (radius - 30);
+                
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 14px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText((i + 1).toString(), textX, textY);
+            }
+
+            // Dibujar círculo central
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 40, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fill();
+        }
+
+        function spinWheel() {
+            if (isSpinning) return;
+            
+            if (hasSpunToday()) {
+                showLimitModal();
+                return;
+            }
+
+            isSpinning = true;
+            document.getElementById('spinButton').disabled = true;
+            document.getElementById('spinButton').textContent = 'GIRANDO...';
+
+            // Sonido
+            if (soundEnabled) {
+                playSpinSound();
+            }
+
+            // Calcular rotación final
+            const spins = 5 + Math.random() * 3; // 5-8 vueltas
+            const finalRotation = currentRotation + (spins * 2 * Math.PI);
+            const duration = 3000; // 3 segundos
+            
+            // Determinar pregunta seleccionada
+            const segmentAngle = (2 * Math.PI) / 30;
+            const normalizedRotation = finalRotation % (2 * Math.PI);
+            const pointerAngle = (2 * Math.PI) - normalizedRotation + (Math.PI / 2);
+            selectedQuestionIndex = Math.floor(pointerAngle / segmentAngle) % 30;
+
+            // Animar
+            animateWheel(currentRotation, finalRotation, duration);
+        }
+
+        function animateWheel(startRotation, endRotation, duration) {
+            const startTime = Date.now();
+            
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function para desaceleración
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                
+                currentRotation = startRotation + (endRotation - startRotation) * easeOut;
+                drawWheel();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    finishSpin();
+                }
+            }
+            
+            animate();
+        }
+
+        function finishSpin() {
+            isSpinning = false;
+            document.getElementById('spinButton').disabled = false;
+            document.getElementById('spinButton').textContent = 'GIRAR';
+            
+            // Marcar como usado hoy
+            markAsSpunToday();
+            
+            // Mostrar pregunta
+            showDailyQuestion();
+            
+            // Actualizar status
+            updateDailyStatus();
+        }
+
+        // === FUNCIONES DE CONTENIDO ===
+        function showDailyQuestion() {
+            const questionElement = document.getElementById('questionText');
+            const reflectionElement = document.getElementById('reflectionText');
+            const messageContainer = document.getElementById('dailyMessage');
+            
+            const question = cosmicQuestions[selectedQuestionIndex];
+            const reflection = reflections[selectedQuestionIndex % reflections.length];
+            
+            questionElement.textContent = question;
+            reflectionElement.textContent = reflection;
+            
+            messageContainer.classList.remove('hidden');
+            messageContainer.classList.add('slide-in');
+            
+            // Scroll suave hacia el mensaje
+            setTimeout(() => {
+                messageContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 500);
+        }
+
+        function loadDailyContent() {
+            // Cargar frase del día
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const quoteIndex = dayOfYear % dailyQuotes.length;
+            document.getElementById('dailyQuote').textContent = dailyQuotes[quoteIndex];
+            
+            // Cargar lección de disciplina
+            const lessonIndex = dayOfYear % disciplineLessons.length;
+            document.getElementById('disciplineLesson').textContent = disciplineLessons[lessonIndex];
+        }
+
+        // === FUNCIONES DE ESTADO DIARIO ===
+        function hasSpunToday() {
+            const today = new Date().toDateString();
+            const lastSpin = getStoredData('lastSpinDate');
+            return lastSpin === today;
+        }
+
+        function markAsSpunToday() {
+            const today = new Date().toDateString();
+            setStoredData('lastSpinDate', today);
+            setStoredData('todayQuestion', selectedQuestionIndex);
+        }
+
+        function checkDailyStatus() {
+            if (hasSpunToday()) {
+                // Mostrar pregunta del día si ya giró
+                const storedQuestionIndex = getStoredData('todayQuestion');
+                if (storedQuestionIndex !== null) {
+                    selectedQuestionIndex = parseInt(storedQuestionIndex);
+                    showDailyQuestion();
+                }
+            }
+            updateDailyStatus();
+        }
+
+        function updateDailyStatus() {
+            const statusElement = document.getElementById('dailyStatus');
+            if (hasSpunToday()) {
+                statusElement.innerHTML = '<span class="text-orange-500 mr-2">⏰</span><span class="text-gray-700 dark:text-gray-300">Ya recibiste tu mensaje hoy</span>';
+            } else {
+                statusElement.innerHTML = '<span class="text-green-500 mr-2">✓</span><span class="text-gray-700 dark:text-gray-300">Tirada disponible hoy</span>';
+            }
+        }
+
+        // === FUNCIONES DE MODAL ===
+        function showLimitModal() {
+            document.getElementById('limitModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('limitModal').classList.add('hidden');
+        }
+
+        // === FUNCIONES DE TEMA ===
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeToggle.innerHTML = '<span class="text-xl">🌙</span>';
+                setStoredData('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                themeToggle.innerHTML = '<span class="text-xl">☀️</span>';
+                setStoredData('theme', 'dark');
+            }
+        }
+
+        function isDarkMode() {
+            const storedTheme = getStoredData('theme');
+            return storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        }
+
+        // === FUNCIONES DE SONIDO ===
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const soundToggle = document.getElementById('soundToggle');
+            soundToggle.innerHTML = soundEnabled ? '<span class="text-xl">🔊</span>' : '<span class="text-xl">🔇</span>';
+            setStoredData('soundEnabled', soundEnabled);
+        }
+
+        function playSpinSound() {
+            const audio = document.getElementById('spinSound');
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log('Error playing sound:', e));
+        }
+
+        // === FUNCIONES DE EFECTOS VISUALES ===
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 50;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // === FUNCIONES DE ALMACENAMIENTO ===
+        function setStoredData(key, value) {
+            try {
+                // Usar variables globales en lugar de localStorage
+                window.cosmicWheelData = window.cosmicWheelData || {};
+                window.cosmicWheelData[key] = value;
+            } catch (e) {
+                console.log('Storage not available:', e);
+            }
+        }
+
+        function getStoredData(key) {
+            try {
+                // Usar variables globales en lugar de localStorage
+                window.cosmicWheelData = window.cosmicWheelData || {};
+                return window.cosmicWheelData[key] || null;
+            } catch (e) {
+                console.log('Storage not available:', e);
+                return null;
+            }
+        }
+
+        // === INICIALIZACIÓN DE DATOS ===
+        function initializeStoredData() {
+            // Cargar configuraciones guardadas
+            const savedTheme = getStoredData('theme');
+            const savedSound = getStoredData('soundEnabled');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeToggle').innerHTML = '<span class="text-xl">☀️</span>';
+            }
+            
+            if (savedSound === false) {
+                soundEnabled = false;
+                document.getElementById('soundToggle').innerHTML = '<span class="text-xl">🔇</span>';
+            }
+        }
+
+        // Inicializar datos almacenados al cargar
+        document.addEventListener('DOMContentLoaded', initializeStoredData);
+    </script>
+
+    <!-- Incluye este script en tu <head> para los íconos -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Barra de navegación inferior -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 z-50">
+  <div class="flex justify-around items-center h-16">
+    
+    <!-- Icono: Inicio -->
+    <button onclick="location.href='index.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition">
+      <i data-lucide="home" class="w-6 h-6"></i>
+      <span class="text-xs">Inicio</span>
+    </button>
+
+    <!-- Icono: Llama -->
+    <button onclick="location.href='fuego.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition">
+      <i data-lucide="flame" class="w-6 h-6"></i>
+      <span class="text-xs">Energía</span>
+    </button>
+
+    <!-- Botón central: Más -->
+    <button onclick="location.href='agregar.html'" class="bg-purple-600 p-4 rounded-full text-white shadow-md -mt-10 hover:bg-purple-700 transition">
+      <i data-lucide="plus" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Icono: Mensajes -->
+    <button onclick="location.href='mensaje.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition">
+      <i data-lucide="message-circle" class="w-6 h-6"></i>
+      <span class="text-xs">Mensaje</span>
+    </button>
+
+    <!-- Icono: Configuración -->
+    <button onclick="location.href='ajustes.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-green-500 transition">
+      <i data-lucide="settings" class="w-6 h-6"></i>
+      <span class="text-xs">Ajustes</span>
+    </button>
+
+  </div>
+</nav>
+
+<!-- Inicializar íconos -->
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>

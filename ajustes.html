@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ajustes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
+
+  <!-- Botón modo oscuro -->
+  <button id="toggleDark"
+    class="fixed top-4 right-4 bg-gray-200 dark:bg-gray-700 p-3 rounded-full shadow-lg hover:scale-105 transition-all duration-300 ring-2 ring-transparent dark:ring-purple-500 z-50"
+    title="Alternar modo oscuro">
+    <i id="darkIcon" data-lucide="moon" class="w-5 h-5 text-gray-800 dark:text-white"></i>
+  </button>
+
+  <main class="p-4 pt-20 pb-24 max-w-lg mx-auto">
+    <h1 class="text-2xl font-bold mb-6 text-center">⚙️ Ajustes</h1>
+
+    <div class="space-y-4">
+      <!-- Limpiar datos -->
+      <button onclick="borrarFrase()"
+        class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded shadow transition">
+        Borrar frase del día
+      </button>
+
+      <button onclick="borrarNotas()"
+        class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded shadow transition">
+        Borrar notas del calendario
+      </button>
+
+      <button onclick="borrarDiario()"
+        class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded shadow transition">
+        Borrar entrada del diario
+      </button>
+
+      <button onclick="borrarTodo()"
+        class="w-full px-4 py-2 bg-black hover:bg-gray-800 text-white rounded shadow transition">
+        🧨 Borrar todo (irrevocable)
+      </button>
+    </div>
+  </main>
+
+  <!-- Barra de navegación -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 z-40">
+    <div class="flex justify-around items-center h-16">
+      <button onclick="location.href='index.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition">
+        <i data-lucide="home" class="w-6 h-6"></i>
+        <span class="text-xs">Inicio</span>
+      </button>
+      <button onclick="location.href='fuego.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition">
+        <i data-lucide="flame" class="w-6 h-6"></i>
+        <span class="text-xs">Energía</span>
+      </button>
+      <button onclick="location.href='agregar.html'" class="bg-purple-600 p-4 rounded-full text-white shadow-md -mt-10 hover:bg-purple-700 transition">
+        <i data-lucide="plus" class="w-6 h-6"></i>
+      </button>
+      <button onclick="location.href='mensaje.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition">
+        <i data-lucide="message-circle" class="w-6 h-6"></i>
+        <span class="text-xs">Mensaje</span>
+      </button>
+      <button onclick="location.href='ajustes.html'" class="flex flex-col items-center text-green-600 dark:text-green-400">
+        <i data-lucide="settings" class="w-6 h-6"></i>
+        <span class="text-xs font-bold">Ajustes</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Script funcional -->
+  <script>
+    // Activar íconos
+    lucide.createIcons();
+
+    // Alternar modo oscuro
+    const toggle = document.getElementById('toggleDark');
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('modoOscuro', isDark);
+      toggle.classList.toggle('ring-purple-500');
+      toggle.classList.toggle('scale-110');
+      lucide.createIcons();
+    });
+
+    // Cargar preferencia de modo oscuro
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('modoOscuro') === 'true') {
+        document.documentElement.classList.add('dark');
+        toggle.classList.add('ring-purple-500', 'scale-110');
+      }
+    });
+
+    // Funciones de limpieza
+    function borrarFrase() {
+      localStorage.removeItem('fraseDelDia');
+      alert('Frase del día borrada');
+    }
+
+    function borrarNotas() {
+      for (let i = 1; i <= 30; i++) {
+        localStorage.removeItem('nota-' + i);
+      }
+      alert('Notas del calendario borradas');
+    }
+
+    function borrarDiario() {
+      localStorage.removeItem('entradaDiario');
+      alert('Entrada del diario borrada');
+    }
+
+    function borrarTodo() {
+      if (confirm('¿Seguro que quieres borrar TODO? Esta acción no se puede deshacer.')) {
+        localStorage.clear();
+        alert('Todo ha sido borrado');
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>
