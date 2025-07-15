@@ -5,6 +5,11 @@ const OPENAI_CONFIG = {
     baseURL: 'https://api.openai.com/v1/chat/completions'
 };
 
+const ELEVENLABS_CONFIG = {
+    apiKey: localStorage.getItem('elevenlabsKey') || "sk_fb732fa912bc50abe7454f698329018e4a4ba048ef3f7cd2",
+    voiceId: 'tYJ83o1EPY9B1fUQwLeh',
+    baseURL: 'https://api.elevenlabs.io/v1/text-to-speech'
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     divRespuestas = document.getElementById("response");
@@ -48,6 +53,59 @@ async function generateDinariusResponse(userResponse) {
 }
 }
 
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed; bottom: 20px; right: 20px; background: #333;
+        color: white; padding: 12px 20px; border-radius: 8px;
+        z-index: 1000; transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.style.transform = 'translateX(0)', 100);
+    setTimeout(() => {
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => document.body.removeChild(toast), 300);
+    }, 3000);
+}
+
+async function generateAndPlayAudio(text) {
+    if (!ELEVENLABS_CONFIG.apiKey) {
+        showToast('⚠️ Configura tu API key de ElevenLabs');
+        return;
+    }
+
+    try {
+        showToast('🎵 Generando voz de Dinarius...');
+        
+        const response = await fetch(`${ELEVENLABS_CONFIG.baseURL}/${ELEVENLABS_CONFIG.voiceId}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'audio/mpeg',
+                'Content-Type': 'application/json',
+                'xi-api-key': ELEVENLABS_CONFIG.apiKey
+            },
+            body: JSON.stringify({
+                text: text,
+                model_id: 'eleven_monolingual_v1',
+                voice_settings: { stability: 0.5, similarity_boost: 0.5 }
+            })
+        });
+
+        const audioBlob = await response.blob();
+        const audio = new Audio(URL.createObjectURL(audioBlob));
+        audio.play();
+        
+    } catch (error) {
+        showToast('❌ Error al generar audio');
+    }
+}
+
+
+
 async function submitResponse() {
     const campoRespuesta = document.getElementById("userResponse").value.trim();
     if (!campoRespuesta) {
@@ -64,7 +122,9 @@ async function submitResponse() {
     respuestaDiv.textContent = dinariusText;
 
     divRespuestas.appendChild(respuestaDiv);
+    generateAndPlayAudio(dinariusText);
 
     // Limpiar campo
     document.getElementById("userResponse").value = "";
+    
 }
