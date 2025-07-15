@@ -7,12 +7,31 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+
   <script>
     tailwind.config = {
       darkMode: 'class'
     };
   </script>
 </head>
+
+<style>
+     .esferita{
+            filter: drop-shadow(2px 2px 5px rgb(0, 38, 255)); 
+            animation: shake 4s ease-in-out infinite;
+        }
+
+        #modalesfera{
+            box-shadow: 0 0 40px rgb(1, 5, 252);
+        }
+
+        #esfera{
+            box-shadow: 0 0 10px rgb(17, 0, 255);
+            animation: float 3s ease-in-out infinite;
+        }
+  </style>
+
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 
   <!-- Botón modo oscuro -->
@@ -26,61 +45,171 @@
     <h1 class="text-2xl font-bold mb-6 text-center">💫 Oráculo Cósmico IA</h1>
 
     <!-- Contenedor IA -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-      <h3 class="text-xl font-bold text-center mb-4">🌌 Pregunta a la Sabiduría Cósmica</h3>
+    <main id="mainSection">
+      <div class="main-content">
+          <div class="dinarius-section">
+              <div class="dinarius-sprite"><img src="dinarius.png" alt="" class="sprite"></div>
+              <div class="dialogue-box">
+                  <div class="question-text" id="questionText">
+                      ¡Saludos, viajero! Soy Dinarius, tu guía espiritual. ¿Estás listo para comenzar este viaje de 30 días hacia la abundancia?
+                  </div>
+              </div>
+              <div class="dinarius-response" id="dinariusResponse"></div>
+          </div>
 
-      <div class="mb-4">
-        <input id="message" type="text" placeholder="Escribe tu pregunta aquí..."
-          class="w-full p-3 rounded-full shadow-md border dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+           <div id="modalEsfera" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div id="modalesfera" class="bg-white dark:bg-gray-900 p-12 rounded-2xl shadow-2xl border-4 border--600 w-full max-w-4xl flex flex-col sm:flex-row items-center animate-fade-in space-y-6 sm:space-y-0 sm:space-x-10">
+          
+          <!-- Imagen de la esfera -->
+          <div class="w-full sm:w-1/3 flex justify-center">
+            <img src="1f52e-removebg-preview.png" alt="Esfera mágica" class="w-48 sm:w-56 esferita">
+          </div>
+      
+          <!-- Contenido creativo más amplio -->
+<div class="w-full sm:w-2/3 text-center sm:text-left text-2xl">
+  <h2 class="text-5xl font-bold text-purple-700 mb-5">⚱️ Esfera Mágica</h2>
+
+  <!-- Aquí va la frase aleatoria -->
+ <div id="mensajeMistico" class="text-gray-700 dark:text-gray-300 mb-6">
+  <h3 id="cristalNombre" class="text-3xl sm:text-4xl font-semibold text-purple-600 mb-2">🌟 Cristal del Día</h3>
+  <p id="afirmacionTexto" class="italic text-xl sm:text-2xl mb-4">Afirmación mágica aquí...</p>
+  <p id="descripcionCristal" class="text-base sm:text-xl">Descripción energética del cristal aquí...</p>
+</div>
+
+  <button onclick="cerrarModal()" class="mt-4 px-10 py-4 bg-purple-600 text-white text-xl rounded-full hover:bg-purple-700 transition-all duration-200">
+    Cerrar mensaje
+  </button>
+</div>
+      
+        </div>
       </div>
-
-      <div class="text-center mb-4">
-        <button id="send"
-          class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition">
-          Preguntar a la IA
+      <div class="response-section" id="response"> 
+        <h3>💭 Tu Respuesta</h3>
+        <textarea 
+            class="user-input" 
+            id="userResponse" 
+            placeholder="Escribe tu respuesta aquí..."
+            maxlength="500"
+        ></textarea>
+        <button class="btn" onclick="submitResponse()" id="submitBtn">
+        
+            ✨ Enviar Respuesta
         </button>
-      </div>
-
-      <div id="chat"
-        class="mt-4 space-y-2 max-h-64 overflow-y-auto bg-gray-50 dark:bg-gray-900 text-sm p-4 rounded-lg border dark:border-gray-700 text-gray-800 dark:text-gray-200">
-        <p class="italic text-gray-500 dark:text-gray-400">Aquí aparecerán las respuestas cósmicas ✨</p>
-      </div>
+        
+        <button class="btn" onclick="skipToNextDay()" id="skipBtn" style="display: none;">
+            ⏭️ Siguiente Día
+        </button>
     </div>
+          </div>
+      </div>
   </main>
+<!-- Barra de navegación inferior -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 z-50">
+  <div class="flex justify-around items-center h-16">
+    
+    <!-- Icono: Inicio -->
+    <button onclick="location.href='index.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-yellow-500 transition">
+      <i data-lucide="home" class="w-6 h-6"></i>
+      <span class="text-xs">Inicio</span>
+    </button>
 
-  <!-- Barra de navegación inferior -->
-  <nav
-    class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 z-40">
-    <div class="flex justify-around items-center h-16">
-      <button onclick="location.href='index.html'"
-        class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition">
-        <i data-lucide="home" class="w-6 h-6"></i>
-        <span class="text-xs">Inicio</span>
-      </button>
-      <button onclick="location.href='fuego.html'"
-        class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition">
-        <i data-lucide="flame" class="w-6 h-6"></i>
-        <span class="text-xs">Energía</span>
-      </button>
-      <button onclick="location.href='agregar.html'"
-        class="bg-purple-600 p-4 rounded-full text-white shadow-md -mt-10 hover:bg-purple-700 transition">
-        <i data-lucide="plus" class="w-6 h-6"></i>
-      </button>
-      <button onclick="location.href='mensaje.html'"
-        class="flex flex-col items-center text-blue-500 dark:text-blue-400 font-bold">
-        <i data-lucide="message-circle" class="w-6 h-6"></i>
-        <span class="text-xs">Mensaje</span>
-      </button>
-      <button onclick="location.href='ajustes.html'"
-        class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-green-500 transition">
-        <i data-lucide="settings" class="w-6 h-6"></i>
-        <span class="text-xs">Ajustes</span>
-      </button>
-    </div>
-  </nav>
+    <!-- Icono: Llama -->
+    <button onclick="location.href='fuego.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition">
+      <i data-lucide="flame" class="w-6 h-6"></i>
+      <span class="text-xs">Energía</span>
+    </button>
 
+    <!-- Botón central: Más -->
+    <button onclick="mostrarModal()" class="bg-blue-600 p-4 rounded-full shadow-md -mt-10 hover:bg-blue-700 transition" id="esfera">
+        <img src="image (2).png" alt="Bola de cristal" class="w-12 h-12" />
+        </button>
+
+    <!-- Icono: Mensajes -->
+    <button onclick="location.href='mensaje.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition">
+      <i data-lucide="message-circle" class="w-6 h-6"></i>
+      <span class="text-xs">chat</span>
+    </button>
+
+    <!-- Icono: Configuración -->
+    <button onclick="location.href='ajustes.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-green-500 transition">
+      <i data-lucide="settings" class="w-6 h-6"></i>
+      <span class="text-xs">Ajustes</span>
+    </button>
   <!-- Scripts -->
   <script>
+ const mensajesMisticos = [
+  {
+    cristal: "Amatista 💜",
+    afirmacion: "Mi mente está en calma y mi intuición me guía con claridad.",
+    descripcion: "Fomenta la paz interior y la conexión espiritual."
+  },
+  {
+    cristal: "Citrino 💛",
+    afirmacion: "Estoy alineado con la energía del éxito y la abundancia.",
+    descripcion: "Atrae prosperidad, confianza y alegría."
+  },
+  {
+    cristal: "Cuarzo Rosa 💗",
+    afirmacion: "Me amo profundamente y atraigo relaciones armoniosas.",
+    descripcion: "Sana el corazón y abre el flujo del amor."
+  },
+  {
+    cristal: "Obsidiana Negra ⚫",
+    afirmacion: "Estoy protegido y libero lo que ya no me pertenece.",
+    descripcion: "Limpia energías negativas y otorga fuerza interior."
+  },
+  {
+    cristal: "Lapislázuli 🔵",
+    afirmacion: "Mi voz es auténtica y mi verdad se expresa con amor.",
+    descripcion: "Estimula la sabiduría, la intuición y la comunicación."
+  },
+  {
+    cristal: "Aventurina Verde 💚",
+    afirmacion: "La suerte y las oportunidades llegan a mí con facilidad.",
+    descripcion: "Atrae buena fortuna, crecimiento y renovación."
+  },
+  {
+    cristal: "Pirita ✨",
+    afirmacion: "El dinero fluye hacia mí de forma constante y poderosa.",
+    descripcion: "Activa la energía del oro, la acción y la prosperidad."
+  },
+  {
+    cristal: "Cuarzo Claro 🤍",
+    afirmacion: "Soy un canal de luz pura y claridad.",
+    descripcion: "Amplifica intenciones, limpia y equilibra."
+  },
+  {
+    cristal: "Turmalina Negra ⚫",
+    afirmacion: "Estoy enraizado, estable y rodeado de protección divina.",
+    descripcion: "Escudo energético contra lo tóxico y el estrés."
+  },
+  {
+    cristal: "Ojo de Tigre 🐯",
+    afirmacion: "Mi voluntad es firme y avanzo con valentía.",
+    descripcion: "Equilibra, da coraje y atrae éxito material."
+  }
+];
+// Función para mostrar frase aleatoria
+function mostrarMensajeMistico() {
+  const indice = Math.floor(Math.random() * mensajesMisticos.length);
+  const mensaje = mensajesMisticos[indice];
+
+  document.getElementById("cristalNombre").textContent = mensaje.cristal;
+  document.getElementById("afirmacionTexto").textContent = mensaje.afirmacion;
+  document.getElementById("descripcionCristal").textContent = mensaje.descripcion;
+}
+
+// Llama esta función cuando se abra el modal
+mostrarMensajeMistico();
+
+        function mostrarModal() {
+    document.getElementById('modalEsfera').classList.remove('hidden');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modalEsfera').classList.add('hidden');}
+
+
     lucide.createIcons();
 
     // Modo oscuro toggle
@@ -99,96 +228,7 @@
       toggle.classList.add('ring-purple-500', 'scale-110');
     }
   </script>
-
-  <script>
-    const apiKey = "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";
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("message");
-    const sendBtn = document.getElementById("send");
-
-    // Cargar historial guardado
-    window.addEventListener("DOMContentLoaded", () => {
-      const guardados = JSON.parse(localStorage.getItem("chatCosmico")) || [];
-      guardados.forEach(m => addMessage(m.sender, m.text));
-    });
-
-    sendBtn.addEventListener("click", async () => {
-      const message = input.value.trim();
-      if (!message) return;
-
-      addMessage("Tú", message);
-      saveMessage("Tú", message);
-      input.value = "";
-
-      showTyping();
-
-      try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-            "HTTP-Referer": "http://localhost",
-            "X-Title": "RuletaCosmica"
-          },
-          body: JSON.stringify({
-            model: "mistralai/mistral-7b-instruct",
-            messages: [
-              {
-                role: "system",
-                content: "Eres una IA que da consejos de abundancia, finanzas y hábitos de vida para mejorar al usuario. Te llamas Cosmic. Tu deber es ayudar, dar frases cósmicas lógicas, y acoplarte al estado de ánimo del usuario. Si no está triste, responde en menos de 9 palabras. Siempre pregunta en qué puedes ayudar y da un consejo sabio pero lógico."
-              },
-              {
-                role: "user",
-                content: message
-              }
-            ]
-          })
-        });
-
-        const data = await response.json();
-        removeTyping();
-
-        const reply = data.choices?.[0]?.message?.content || "Ups, no recibí respuesta del universo. 🌌";
-        addMessage("🌠 Sabiduría Cósmica", reply);
-        saveMessage("🌠 Sabiduría Cósmica", reply);
-
-      } catch (error) {
-        console.error("Error:", error);
-        removeTyping();
-        const errMsg = "El canal cósmico está bloqueado. Intenta más tarde. 🪐";
-        addMessage("🌠 Sabiduría Cósmica", errMsg);
-        saveMessage("🌠 Sabiduría Cósmica", errMsg);
-      }
-    });
-
-    function addMessage(sender, text) {
-      const msg = document.createElement("div");
-      msg.className = "p-3 rounded-lg bg-gray-100 dark:bg-gray-800 shadow mb-2";
-      msg.innerHTML = `<strong>${sender}:</strong><br>${text}`;
-      chat.appendChild(msg);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function showTyping() {
-      const typing = document.createElement("div");
-      typing.id = "typing";
-      typing.className = "p-3 italic text-gray-500 dark:text-gray-400";
-      typing.innerHTML = `<strong>🌠 Sabiduría Cósmica:</strong> escribiendo... ✍️`;
-      chat.appendChild(typing);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function removeTyping() {
-      const typing = document.getElementById("typing");
-      if (typing) typing.remove();
-    }
-
-    function saveMessage(sender, text) {
-      const mensajes = JSON.parse(localStorage.getItem("chatCosmico")) || [];
-      mensajes.push({ sender, text });
-      localStorage.setItem("chatCosmico", JSON.stringify(mensajes));
-    }
-  </script>
+<script src="script.js"> </script>
+ 
 </body>
 </html>

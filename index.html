@@ -12,7 +12,7 @@
                 extend: {
                     colors: {
                         cosmic: {
-                            purple: '#6B46C1',
+                            purple: '#00FFF8',
                             blue: '#3B82F6',
                             pink: '#EC4899',
                             gold: '#F59E0B',
@@ -25,18 +25,60 @@
         }
     </script>
     <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+            
+        
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
         body {
             font-family: 'Inter', sans-serif;
         }
+
+        .gatito {
+         animation: float 2s ease-in-out infinite;
+         filter: drop-shadow(2px 2px 5px rgb(36, 22, 235));
+          }
+
+        .esferita{
+            filter: drop-shadow(2px 2px 5px rgb(36, 22, 235)); 
+            animation: shake 4s ease-in-out infinite;
+        }
+
+        #modalesfera{
+            box-shadow: 0 0 40px rgb(252, 93, 1);
+        }
+
+          .titulo{
+            font-family: 'Press Start 2P', cursive;
+            font-weight: bold;
+            font-size: 2rem;
+          }
+
+        #esfera{
+            box-shadow: 0 0 10px rgb(255, 115, 0);
+            animation: float 3s ease-in-out infinite;
+        }
+  
+       @keyframes float {
+         0%, 100% { transform: translateY(0px); }
+         50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shake {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-5px); }
+  50%  { transform: translateY(5px); }
+  75%  { transform: translateX(-5px); }
+  100% { transform: translateX(-5); }
+}
         
         .cosmic-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ea6666 0%, #a24b4b 100%);
         }
         
         .cosmic-gradient-dark {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #721e1e 0%, #00FFF8 100%);
         }
         
         .wheel-container {
@@ -53,10 +95,10 @@
         
         @keyframes pulse-glow {
             from {
-                box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+                box-shadow: 0 0 20px rgba(92, 246, 125, 0.5);
             }
             to {
-                box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+                box-shadow: 0 0 30px rgba(199, 65, 65, 0.8);
             }
         }
         
@@ -92,7 +134,7 @@
             position: absolute;
             width: 2px;
             height: 2px;
-            background: white;
+            background: rgb(255, 255, 255);
             border-radius: 50%;
             animation: twinkle 2s infinite;
         }
@@ -114,9 +156,26 @@
             from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
+        @keyframes fade-in {
+         from {
+         opacity: 0;
+         transform: scale(0.95);
+            }
+           to {
+          opacity: 1;
+          transform: scale(1);
+         }
+         }
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
     </style>
 </head>
-<body class="min-h-screen transition-colors duration-300 bg-gradient-to-br from-purple-100 to-blue-100 dark:from-gray-900 dark:to-purple-900">
+<!--aqui se cambia el fondo de tailwinds-->
+<body class="min-h-screen transition-colors duration-300 bg-gradient-to-br from-yellow-100 to-blue-100 dark:from-purple-700 dark:via-blue-800 dark:to-red-900 ">
+
     <!-- Estrellas de fondo -->
     <div class="stars" id="stars"></div>
     
@@ -124,11 +183,11 @@
     <header class="relative z-10 p-6">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <span class="text-white font-bold text-lg">🌟</span>
+                <div class="w-20 h-20">
+                    <img src="dinarius.png" alt="gatito" class="w-full h-full object-contain gatito" />
                 </div>
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Ruleta Cósmica de Sabiduría</h1>
-            </div>
+                <h1 class="titulo text-gray-800 dark:text-white" id="titulo">Ruleta Cósmica de Sabiduría</h1>
+              </div>
             
             <div class="flex items-center space-x-4">
                 <button id="themeToggle" class="p-2 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
@@ -171,7 +230,7 @@
                         <div class="w-6 h-8 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-b-full shadow-lg"></div>
                     </div>
                     <!-- Botón central -->
-                    <button id="spinButton" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center text-white font-bold text-sm pulse-glow">
+                    <button id="spinButton" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center text-black font-bold text-sm pulse-glow">
                         GIRAR
                     </button>
                 </div>
@@ -206,6 +265,8 @@
             </h3>
             <p id="disciplineLesson" class="text-gray-600 dark:text-gray-300 leading-relaxed text-center"></p>
         </div>
+
+    </main>
      
 
     <!-- Modal de límite diario -->
@@ -227,10 +288,52 @@
         </div>
     </div>
 
-    <!-- Audio -->
-    <audio id="spinSound" preload="auto">
-        <source src="data:audio/wav;base64,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" type="audio/wav">
-    </audio>
+    
+    <div id="modalEsfera" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div id="modalesfera" class="bg-white dark:bg-gray-900 p-12 rounded-2xl shadow-2xl border-4 border--600 w-full max-w-4xl flex flex-col sm:flex-row items-center animate-fade-in space-y-6 sm:space-y-0 sm:space-x-10">
+          
+          <!-- Imagen de la esfera -->
+          <div class="w-full sm:w-1/3 flex justify-center">
+            <img src="1f52e-removebg-preview.png" alt="Esfera mágica" class="w-48 sm:w-56 esferita">
+          </div>
+      
+          <!-- Contenido creativo más amplio -->
+<div class="w-full sm:w-2/3 text-center sm:text-left text-2xl">
+  <h2 class="text-5xl font-bold text-purple-700 mb-5">⚱️ Esfera Mágica</h2>
+
+  <!-- Aquí va la frase aleatoria -->
+ <div id="mensajeMistico" class="text-gray-700 dark:text-gray-300 mb-6">
+  <h3 id="cristalNombre" class="text-3xl sm:text-4xl font-semibold text-purple-600 mb-2">🌟 Cristal del Día</h3>
+  <p id="afirmacionTexto" class="italic text-xl sm:text-2xl mb-4">Afirmación mágica aquí...</p>
+  <p id="descripcionCristal" class="text-base sm:text-xl">Descripción energética del cristal aquí...</p>
+</div>
+
+  <button onclick="cerrarModal()" class="mt-4 px-10 py-4 bg-purple-600 text-white text-xl rounded-full hover:bg-purple-700 transition-all duration-200">
+    Cerrar mensaje
+  </button>
+</div>
+      
+        </div>
+      </div>
+
+<button 
+  id="botonLibro"
+  class="fixed top-6 left-6 bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-full shadow-xl transition-all duration-300 z-50"
+  aria-label="Abrir libro"
+>
+  <i data-lucide="book" class="w-6 h-6"></i>
+</button>
+
+
+      <!-- 📘 Carta Filosófica -->
+<div id="cartaFilosofica" class="hidden absolute top-24 left-6 bg-white dark:bg-gray-900 border-l-8 border-purple-600 shadow-2xl rounded-2xl p-6 max-w-sm z-40 space-y-4 transition-all duration-300">
+  <h3 class="text-2xl font-bold text-purple-700">📘 Cita Filosófica</h3>
+  <p id="citaFilosoficaTexto" class="italic text-gray-800 dark:text-gray-200 text-lg leading-relaxed">
+    “Cargando sabiduría…”
+  </p>
+  <button onclick="cerrarCarta()" class="text-purple-600 hover:underline text-sm">Cerrar</button>
+</div>
+
 
     <script>
         // === DATOS Y CONFIGURACIÓN ===
@@ -306,6 +409,79 @@
             "Práctica de Recibir: Acepta un cumplido hoy sin desviarlo. Practica el arte de recibir con gracia."
         ];
 
+
+       const mensajesMisticos = [
+  {
+    cristal: "Amatista 💜",
+    afirmacion: "Mi mente está en calma y mi intuición me guía con claridad.",
+    descripcion: "Fomenta la paz interior y la conexión espiritual."
+  },
+  {
+    cristal: "Citrino 💛",
+    afirmacion: "Estoy alineado con la energía del éxito y la abundancia.",
+    descripcion: "Atrae prosperidad, confianza y alegría."
+  },
+  {
+    cristal: "Cuarzo Rosa 💗",
+    afirmacion: "Me amo profundamente y atraigo relaciones armoniosas.",
+    descripcion: "Sana el corazón y abre el flujo del amor."
+  },
+  {
+    cristal: "Obsidiana Negra ⚫",
+    afirmacion: "Estoy protegido y libero lo que ya no me pertenece.",
+    descripcion: "Limpia energías negativas y otorga fuerza interior."
+  },
+  {
+    cristal: "Lapislázuli 🔵",
+    afirmacion: "Mi voz es auténtica y mi verdad se expresa con amor.",
+    descripcion: "Estimula la sabiduría, la intuición y la comunicación."
+  },
+  {
+    cristal: "Aventurina Verde 💚",
+    afirmacion: "La suerte y las oportunidades llegan a mí con facilidad.",
+    descripcion: "Atrae buena fortuna, crecimiento y renovación."
+  },
+  {
+    cristal: "Pirita ✨",
+    afirmacion: "El dinero fluye hacia mí de forma constante y poderosa.",
+    descripcion: "Activa la energía del oro, la acción y la prosperidad."
+  },
+  {
+    cristal: "Cuarzo Claro 🤍",
+    afirmacion: "Soy un canal de luz pura y claridad.",
+    descripcion: "Amplifica intenciones, limpia y equilibra."
+  },
+  {
+    cristal: "Turmalina Negra ⚫",
+    afirmacion: "Estoy enraizado, estable y rodeado de protección divina.",
+    descripcion: "Escudo energético contra lo tóxico y el estrés."
+  },
+  {
+    cristal: "Ojo de Tigre 🐯",
+    afirmacion: "Mi voluntad es firme y avanzo con valentía.",
+    descripcion: "Equilibra, da coraje y atrae éxito material."
+  }
+];
+// Función para mostrar frase aleatoria
+function mostrarMensajeMistico() {
+  const indice = Math.floor(Math.random() * mensajesMisticos.length);
+  const mensaje = mensajesMisticos[indice];
+
+  document.getElementById("cristalNombre").textContent = mensaje.cristal;
+  document.getElementById("afirmacionTexto").textContent = mensaje.afirmacion;
+  document.getElementById("descripcionCristal").textContent = mensaje.descripcion;
+}
+
+// Llama esta función cuando se abra el modal
+mostrarMensajeMistico();
+
+        function mostrarModal() {
+    document.getElementById('modalEsfera').classList.remove('hidden');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modalEsfera').classList.add('hidden');}
+
         // === VARIABLES GLOBALES ===
         let canvas, ctx;
         let isSpinning = false;
@@ -314,10 +490,10 @@
         let selectedQuestionIndex = 0;
 
         // === INICIALIZACIÓN ===
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-        });
-
+       document.addEventListener('DOMContentLoaded', function() {
+    initializeStoredData();  // primero carga las preferencias del usuario (tema, sonido)
+    initializeApp();         // luego carga la app con la ruleta
+});
         function initializeApp() {
             canvas = document.getElementById('wheelCanvas');
             ctx = canvas.getContext('2d');
@@ -343,57 +519,68 @@
         }
 
         // === FUNCIONES DE LA RULETA ===
-        function drawWheel() {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = 180;
-            const segments = 30;
-            const anglePerSegment = (2 * Math.PI) / segments;
+      function drawWheel() {
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 180;
+    const segments = 30;
+    const anglePerSegment = (2 * Math.PI) / segments;
 
-            // Colores cósmicos
-            const colors = [
-                '#6B46C1', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6',
-                '#EF4444', '#F97316', '#84CC16', '#06B6D4', '#8B5CF6', '#EC4899'
-            ];
+    const colors = [
+        '#6B46C1', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6',
+        '#EF4444', '#F97316', '#84CC16', '#06B6D4', '#8B5CF6', '#EC4899'
+    ];
 
-            // Limpiar canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar segmentos
-            for (let i = 0; i < segments; i++) {
-                const startAngle = i * anglePerSegment + currentRotation;
-                const endAngle = (i + 1) * anglePerSegment + currentRotation;
-                
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-                ctx.closePath();
-                
-                ctx.fillStyle = colors[i % colors.length];
-                ctx.fill();
-                
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-                ctx.lineWidth = 2;
-                ctx.stroke();
+    // Guardar el estado original
+    ctx.save();
 
-                // Dibujar números
-                const textAngle = startAngle + anglePerSegment / 2;
-                const textX = centerX + Math.cos(textAngle) * (radius - 30);
-                const textY = centerY + Math.sin(textAngle) * (radius - 30);
-                
-                ctx.fillStyle = 'white';
-                ctx.font = 'bold 14px Inter';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText((i + 1).toString(), textX, textY);
-            }
+    // Mover el centro de rotación
+    ctx.translate(centerX, centerY);
+    ctx.rotate(currentRotation);
 
-            // Dibujar círculo central
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, 40, 0, 2 * Math.PI);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            ctx.fill();
-        }
+    for (let i = 0; i < segments; i++) {
+        const startAngle = i * anglePerSegment;
+        const endAngle = startAngle + anglePerSegment;
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius, startAngle, endAngle);
+        ctx.closePath();
+
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Dibujar números
+        const textAngle = startAngle + anglePerSegment / 2;
+        const textX = Math.cos(textAngle) * (radius - 30);
+        const textY = Math.sin(textAngle) * (radius - 30);
+
+        ctx.save();
+        ctx.translate(textX, textY);
+        ctx.rotate(textAngle);
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 14px Inter';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText((i + 1).toString(), 0, 0);
+        ctx.restore();
+    }
+
+    // Restaurar el contexto
+    ctx.restore();
+
+    // Dibujar el círculo central sin rotación
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 40, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fill();
+}
 
         function spinWheel() {
             if (isSpinning) return;
@@ -421,11 +608,45 @@
             const segmentAngle = (2 * Math.PI) / 30;
             const normalizedRotation = finalRotation % (2 * Math.PI);
             const pointerAngle = (2 * Math.PI) - normalizedRotation + (Math.PI / 2);
-            selectedQuestionIndex = Math.floor(pointerAngle / segmentAngle) % 30;
+           const segments = 30;
+           selectedQuestionIndex = (Math.floor(pointerAngle / segmentAngle) + segments) % segments;
 
             // Animar
             animateWheel(currentRotation, finalRotation, duration);
         }
+
+        const citasFilosoficas = [
+ "“El dinero es un excelente sirviente, pero un pésimo amo.” – Francis Bacon",
+  "“El propósito de la riqueza es servir, no dominar.” – Mahatma Gandhi",
+  "“Donde tus talentos y las necesidades del mundo se cruzan, allí está tu vocación.” – Aristóteles",
+  "“La verdadera abundancia comienza con la gratitud.” – Eckhart Tolle",
+  "“El éxito no se mide por lo que logras, sino por la energía que inspiras.” – Marianne Williamson",
+  "“Ganar dinero no es el objetivo; el objetivo es crecer y servir desde tu esencia.” – Deepak Chopra",
+  "“No es más rico quien más tiene, sino quien menos necesita.” – Epicteto",
+  "“El universo recompensa la acción alineada con tu propósito.” – Joe Dispenza",
+  "“Tu trabajo es descubrir tu mundo y luego entregarte a él con todo tu corazón.” – Buda",
+  "“Haz de tu vida un negocio sagrado. Todo lo que haces deja huella energética.” – Anónimo",
+  "“La riqueza externa es un reflejo de tu riqueza interna.” – Louise Hay",
+  "“Si sirves a los demás con integridad, el dinero llegará como consecuencia.” – Tony Robbins",
+  "“El dinero es una extensión de tu conciencia. Dale dirección desde tu alma.” – Anónimo",
+  "“Haz lo que amas y el dinero llegará, pero llega más rápido si también sirves al mundo.” – Wayne Dyer",
+  "“El valor está en lo que eres, no en lo que posees.” – Ralph Waldo Emerson"
+];
+
+function mostrarCartaFilosofica() {
+  const citaAleatoria = citasFilosoficas[Math.floor(Math.random() * citasFilosoficas.length)];
+  document.getElementById("citaFilosoficaTexto").textContent = citaAleatoria;
+  document.getElementById("cartaFilosofica").classList.remove("hidden");
+}
+
+function cerrarCarta() {
+  document.getElementById("cartaFilosofica").classList.add("hidden");
+}
+
+// Conectar el botón al evento
+document.getElementById("botonLibro").addEventListener("click", () => {
+  mostrarCartaFilosofica();
+});
 
         function animateWheel(startRotation, endRotation, duration) {
             const startTime = Date.now();
@@ -454,6 +675,8 @@
             isSpinning = false;
             document.getElementById('spinButton').disabled = false;
             document.getElementById('spinButton').textContent = 'GIRAR';
+
+                currentRotation = currentRotation % (2 * Math.PI);
             
             // Marcar como usado hoy
             markAsSpunToday();
@@ -545,14 +768,17 @@
         function toggleTheme() {
             const html = document.documentElement;
             const themeToggle = document.getElementById('themeToggle');
+            const tituloToggle = document.getElementById('titulo')
             
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
+                
                 themeToggle.innerHTML = '<span class="text-xl">🌙</span>';
                 setStoredData('theme', 'light');
             } else {
                 html.classList.add('dark');
                 themeToggle.innerHTML = '<span class="text-xl">☀️</span>';
+
                 setStoredData('theme', 'dark');
             }
         }
@@ -594,25 +820,14 @@
 
         // === FUNCIONES DE ALMACENAMIENTO ===
         function setStoredData(key, value) {
-            try {
-                // Usar variables globales en lugar de localStorage
-                window.cosmicWheelData = window.cosmicWheelData || {};
-                window.cosmicWheelData[key] = value;
-            } catch (e) {
-                console.log('Storage not available:', e);
-            }
-        }
+    localStorage.setItem(key, JSON.stringify(value));
+}
 
-        function getStoredData(key) {
-            try {
-                // Usar variables globales en lugar de localStorage
-                window.cosmicWheelData = window.cosmicWheelData || {};
-                return window.cosmicWheelData[key] || null;
-            } catch (e) {
-                console.log('Storage not available:', e);
-                return null;
-            }
-        }
+function getStoredData(key) {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+}
+        
 
         // === INICIALIZACIÓN DE DATOS ===
         function initializeStoredData() {
@@ -632,7 +847,7 @@
         }
 
         // Inicializar datos almacenados al cargar
-        document.addEventListener('DOMContentLoaded', initializeStoredData);
+      
     </script>
 
     <!-- Incluye este script en tu <head> para los íconos -->
@@ -643,7 +858,7 @@
   <div class="flex justify-around items-center h-16">
     
     <!-- Icono: Inicio -->
-    <button onclick="location.href='index.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition">
+    <button onclick="location.href='index.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-yellow-500 transition">
       <i data-lucide="home" class="w-6 h-6"></i>
       <span class="text-xs">Inicio</span>
     </button>
@@ -655,14 +870,14 @@
     </button>
 
     <!-- Botón central: Más -->
-    <button onclick="location.href='agregar.html'" class="bg-purple-600 p-4 rounded-full text-white shadow-md -mt-10 hover:bg-purple-700 transition">
-      <i data-lucide="plus" class="w-6 h-6"></i>
-    </button>
+    <button onclick="mostrarModal()" class="bg-orange-600 p-4 rounded-full shadow-md -mt-10 hover:bg-orange-700 transition" id="esfera">
+        <img src="image (2).png" alt="Bola de cristal" class="w-12 h-12" />
+        </button>
 
     <!-- Icono: Mensajes -->
     <button onclick="location.href='mensaje.html'" class="flex flex-col items-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition">
       <i data-lucide="message-circle" class="w-6 h-6"></i>
-      <span class="text-xs">Mensaje</span>
+      <span class="text-xs">chat</span>
     </button>
 
     <!-- Icono: Configuración -->
@@ -679,5 +894,20 @@
   lucide.createIcons();
 </script>
 
+
+
+
+
+
+
+
+<script>
+  lucide.createIcons();
+
+  
+
+</script>
+
+<audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-wheel-spin-1663.mp3" preload="auto"></audio>
 </body>
 </html>
